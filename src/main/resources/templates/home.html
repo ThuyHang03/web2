@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Hoa Thúy Hằng</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Slider */
+
+        .slider {
+            position: relative;
+            width: 90%;
+            max-width: 1400px;
+            height: 420px;
+            margin: 25px auto;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Search */
+
+        .search-box {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto 25px;
+            background: white;
+            padding: 18px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-box form {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 250px;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .search-box button,
+        .cart-btn,
+        .order-btn {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-box button {
+            background: #ff69b4;
+        }
+
+        .cart-btn {
+            background: #28a745;
+        }
+
+        .order-btn {
+            background: #2196f3;
+        }
+
+        /* Main */
+
+        .main-content {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h2 {
+            color: #ff69b4;
+            margin-bottom: 20px;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #555;
+            transition: .3s;
+        }
+
+        .category-item:hover {
+            background: #ff69b4;
+            color: white;
+        }
+
+        /* Products */
+
+        .container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            position: relative;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff1744;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 18px;
+        }
+
+        .name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #e53935;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .old-price {
+            color: #999;
+            text-decoration: line-through;
+            margin-bottom: 6px;
+        }
+
+        .description {
+            margin-top: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Pagination */
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 40px 0;
+        }
+
+        .pagination a {
+            background: white;
+            color: #333;
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .pagination a.active {
+            background: #ff69b4;
+            color: white;
+        }
+
+        .user-info {
+            font-weight: bold;
+            color: #666;
+        }
+
+        @media (max-width: 992px) {
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .search-box form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="slider">
+    <img src="/images/banner1.jpg" class="slide active">
+    <img src="/images/banner2.jpg" class="slide">
+    <img src="/images/banner3.jpg" class="slide">
+</div>
+
+<div class="search-box">
+
+    <form action="/search" method="get">
+
+        <input type="text"
+               name="keyword"
+               placeholder="Nhập tên hoa...">
+
+        <button type="submit">
+            Tìm kiếm
+        </button>
+
+        <a href="/cart" class="cart-btn">
+            🛒 Giỏ hàng (<span th:text="${cartCount} ?: 0"></span>)
+        </a>
+
+        <a th:if="${session.user != null}"
+           href="/my-orders"
+           class="order-btn">
+            📦 Đơn hàng (<span th:text="${orderCount} ?: 0"></span>)
+        </a>
+
+        <span th:if="${session.user != null}"
+              class="user-info">
+            👤 <span th:text="${session.user.username}"></span>
+        </span>
+
+    </form>
+
+</div>
+
+<div class="main-content">
+
+    <aside class="sidebar">
+
+        <h2>Danh mục</h2>
+
+        <div class="category-list">
+
+            <a th:each="category : ${categories}"
+               th:href="@{/category/{id}(id=${category.id})}"
+               class="category-item"
+               th:text="${category.name}">
+            </a>
+
+        </div>
+
+    </aside>
+
+    <div class="container">
+
+        <a th:each="product : ${products}"
+           th:href="@{'/product/' + ${product.id}}">
+
+            <div class="card">
+
+                <div class="discount-badge"
+                     th:if="${product.discountPercent != null && product.discountPercent > 0}">
+                    -<span th:text="${product.discountPercent}"></span>%
+                </div>
+
+                <img th:src="@{'/images/' + ${product.image}}">
+
+                <div class="content">
+
+                    <div class="name"
+                         th:text="${product.name}">
+                    </div>
+
+                    <div th:if="${product.discountPercent != null && product.discountPercent > 0}">
+
+                        <div class="old-price">
+                            <span th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}"></span>
+                            VNĐ
+                        </div>
+
+                        <div class="price">
+                            <span th:text="${#numbers.formatDecimal(product.price * (100 - product.discountPercent) / 100,0,'COMMA',0,'POINT')}"></span>
+                            VNĐ
+                        </div>
+
+                    </div>
+
+                    <div class="price"
+                         th:if="${product.discountPercent == null || product.discountPercent == 0}"
+                         th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')} + ' VNĐ'">
+                    </div>
+
+                    <div class="description"
+                         th:text="${product.description}">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+
+<div class="pagination" th:if="${totalPages > 1}">
+
+    <a th:if="${currentPage > 0}"
+       th:href="@{/(page=${currentPage - 1})}">
+        ←
+    </a>
+
+    <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+       th:href="@{/(page=${i})}"
+       th:text="${i + 1}"
+       th:classappend="${i == currentPage} ? 'active' : ''">
+    </a>
+
+    <a th:if="${currentPage < totalPages - 1}"
+       th:href="@{/(page=${currentPage + 1})}">
+        →
+    </a>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    const slides = document.querySelectorAll(".slide");
+
+    let current = 0;
+
+    setInterval(() => {
+
+        slides[current].classList.remove("active");
+
+        current = (current + 1) % slides.length;
+
+        slides[current].classList.add("active");
+
+    }, 5000);
+</script>
+
+</body>
+</html>
+

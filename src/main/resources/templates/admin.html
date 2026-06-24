@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td{
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        img{
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .btn{
+            padding: 8px 15px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .edit{
+            background: orange;
+        }
+
+        .delete{
+            background: red;
+        }
+
+        .add{
+            background: green;
+            padding: 10px 20px;
+        }
+
+        .search-box{
+            margin-bottom: 20px;
+        }
+
+        .search-box input{
+            padding: 8px;
+            width: 250px;
+        }
+
+        .search-box button{
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <a href="/admin/users" class="admin-btn">
+    👥 Quản lý khách hàng
+</a>
+<a href="/admin/orders" style="color:black;">
+    📦 Quản lý đơn hàng
+</a>
+<!-- <a href="/admin/orders" class="btn ">
+    📦 Quản lý đơn hàng
+</a> -->
+
+<h1>Quản lý sản phẩm</h1>
+
+<form action="/admin/search"
+      method="get"
+      class="search-box">
+
+    <input type="text"
+           name="keyword"
+           placeholder="Nhập tên hoa...">
+
+    <button type="submit">
+        Tìm kiếm
+    </button>
+
+    <a href="/admin">
+        <button type="button">
+            Hiện tất cả
+        </button>
+    </a>
+
+</form>
+
+<a href="/admin/add" class="btn add">
+    ➕ Thêm sản phẩm
+</a>
+
+<table>
+
+    <tr>
+        <th>ID</th>
+        <th>Ảnh</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Giảm giá</th>
+        <th>Danh mục</th>
+        <th>Sửa</th>
+        <th>Xóa</th>
+    </tr>
+
+    <tr th:each="p : ${products}">
+
+        <td th:text="${p.id}"></td>
+
+        <td>
+            <img th:src="@{'/images/' + ${p.image}}">
+        </td>
+
+        <td th:text="${p.name}"></td>
+
+       <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+
+<td>
+
+    <span th:if="${p.discountPercent != null && p.discountPercent > 0}"
+          th:text="${p.discountPercent + '%'}"
+          style="
+            background:red;
+            color:white;
+            padding:4px 8px;
+            border-radius:5px;">
+    </span>
+
+    <span th:if="${p.discountPercent == null || p.discountPercent == 0}">
+        Không giảm
+    </span>
+
+</td>
+
+<td th:text="${p.category != null ? p.category.name : 'Chưa phân loại'}"></td>
+
+        <td>
+          <a class="btn edit"
+   th:href="@{/admin/edit/{id}(id=${p.id})}">
+    Sửa
+</a>
+        </td>
+
+        <td>
+            <a class="btn delete"
+       th:href="@{/admin/delete/{id}(id=${p.id})}"
+       onclick="return confirm('Bạn có chắc muốn xóa?')">
+        Xóa
+    </a>
+        </td>
+
+    </tr>
+
+</table>
+
+</body>
+</html>

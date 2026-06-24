@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background:#f5f5f5;
+            margin:0;
+            padding:0;
+        }
+
+        .container{
+            width:900px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .product{
+            display:flex;
+            gap:30px;
+        }
+
+        .product img{
+            width:400px;
+            height:400px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+        .info{
+            flex:1;
+        }
+
+        h1{
+            margin-top:0;
+        }
+
+        .price{
+            color:red;
+            font-size:30px;
+            font-weight:bold;
+            margin:20px 0;
+        }
+
+        .description{
+            color:#555;
+            line-height:1.6;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:20px;
+            padding:12px 20px;
+            text-decoration:none;
+            border-radius:5px;
+            color:white;
+            background:#28a745;
+        }
+
+        .back{
+            background:#ff69b4;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+
+    <div class="product">
+
+        <img th:src="@{'/images/' + ${product.image}}">
+
+        <div class="info">
+
+            <h1 th:text="${product.name}"></h1>
+
+            <div th:if="${product.discountPercent != null && product.discountPercent > 0}">
+
+    <div style="
+        color: gray;
+        text-decoration: line-through;
+        font-size: 20px;">
+
+        <span th:text="${#numbers.formatDecimal(
+            product.price,
+            0,
+            'COMMA',
+            0,
+            'POINT')}">
+        </span> VNĐ
+
+    </div>
+
+    <div class="price">
+
+        <span th:text="${#numbers.formatDecimal(
+            product.price * (100 - product.discountPercent) / 100,
+            0,
+            'COMMA',
+            0,
+            'POINT')}">
+        </span> VNĐ
+
+    </div>
+
+    <div style="
+        background: red;
+        color: white;
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 5px;
+        margin-top: 10px;">
+
+        Giảm <span th:text="${product.discountPercent}"></span>%
+
+    </div>
+
+</div>
+
+<div class="price"
+     th:if="${product.discountPercent == null || product.discountPercent == 0}"
+     th:text="${#numbers.formatDecimal(
+        product.price,
+        0,
+        'COMMA',
+        0,
+        'POINT')} + ' VNĐ'">
+</div>
+
+            <div class="description"
+                 th:text="${product.description}">
+            </div>
+
+           <a th:href="@{'/cart/add/' + ${product.id}}"
+   class="btn">
+    🛒 Thêm vào giỏ hàng
+    <div th:if="${param.success}"
+     style="color:green;font-weight:bold;">
+    ✅ Đã thêm vào giỏ hàng
+</div>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</a>
+
+            <br><br>
+
+            <a href="/" class="btn back">
+                ← Quay lại trang chủ
+                <link rel="stylesheet" th:href="@{/css/style.css}">
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

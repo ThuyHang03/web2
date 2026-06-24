@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý đơn hàng</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#e8e2e2;
+    margin:0;
+}
+
+.header{
+    background:#ff69b4;
+    color:rgb(178, 99, 99);
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    width:95%;
+    margin:30px auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:rgb(72, 181, 110);
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+th{
+    background:#ff69b4;
+    color:rgb(64, 188, 97);
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #130505;
+    text-align:center;
+}
+
+tr:hover{
+    background:#7b7575;
+}
+
+.status{
+    padding:6px 12px;
+    border-radius:20px;
+    color:rgb(82, 14, 166);
+    font-weight:bold;
+}
+
+.waiting{
+    background:#ff9800;
+}
+
+.confirmed{
+    background:#28a745;
+}
+
+.cancelled{
+    background:#f44336;
+}
+
+.btn{
+    text-decoration:none;
+    color:rgb(210, 99, 99);
+    padding:8px 12px;
+    border-radius:6px;
+    font-size:14px;
+}
+
+.btn-view{
+    background:#2196f3;
+}
+
+.btn-confirm{
+    background:#28a745;
+}
+
+.btn-cancel{
+    background:#f44336;
+}
+
+.back{
+    display:inline-block;
+    margin-bottom:20px;
+    text-decoration:none;
+    background:#444;
+    color:rgb(193, 170, 170);
+    padding:10px 15px;
+    border-radius:8px;
+}
+
+</style>
+
+</head>
+<body>
+    <a href="/admin/orders" style="color:black;">
+    📦 Quản lý đơn hàng
+</a>
+
+<!-- <a href="/admin/orders" class="btn">
+    📦 Quản lý đơn hàng
+</a> -->
+
+<div class="container">
+
+    <a href="/admin" class="back">
+        ← Quay lại Admin
+    </a>
+
+    <table>
+
+        <thead>
+
+        <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>SĐT</th>
+            <th>Tổng tiền</th>
+            <th>Ngày mua</th>
+            <th>Chi tiết</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        <tr th:each="order : ${orders}">
+
+            <td th:text="${order.id}"></td>
+
+            <td th:text="${order.customerName}"></td>
+
+            <td th:text="${order.phone}"></td>
+
+            <td th:text="${#numbers.formatDecimal(order.total,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+
+            <td th:text="${#temporals.format(order.orderDate,'dd/MM/yyyy HH:mm')}"></td>
+
+          
+
+            <td>
+
+                <a th:href="@{/admin/orders/{id}(id=${order.id})}"
+                   class="btn btn-view">
+                    Xem
+                </a>
+
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

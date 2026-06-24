@@ -1,0 +1,198 @@
+<header th:fragment="header">
+
+<style>
+
+.header{
+    background:#ff69b4;
+    color:white;
+    padding:15px 30px;
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:32px;
+    font-weight:bold;
+}
+
+.menu{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    font-size:18px;
+}
+
+/* ===== Khối người dùng ===== */
+
+.guest-box,
+.user-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* ===== Nút chung ===== */
+
+.login-btn,
+.register-btn,
+.logout-btn,
+.user-btn,
+.cart-btn,
+.order-btn{
+    text-decoration:none !important;
+    font-weight:bold;
+    padding:10px 16px;
+    border-radius:25px;
+    transition:0.3s;
+}
+
+/* ===== Đăng nhập ===== */
+
+.login-btn{
+    background:#ff9800;
+    color:white !important;
+}
+
+.login-btn:hover{
+    opacity:0.8;
+    transform:translateY(-2px);
+}
+
+/* ===== Đăng ký ===== */
+
+.register-btn{
+    background:#9c27b0;
+    color:white !important;
+}
+
+.register-btn:hover{
+    background:#7b1fa2;
+    transform:translateY(-2px);
+}
+
+/* ===== Hồ sơ ===== */
+
+.user-btn{
+    background:white;
+    color:#ff69b4 !important;
+}
+
+.user-btn:hover{
+    background:#ffe6f2;
+    transform:translateY(-2px);
+}
+
+/* ===== Đơn hàng ===== */
+
+.order-btn{
+    background:#2196f3;
+    color:white !important;
+}
+
+.order-btn:hover{
+    background:#1976d2;
+    transform:translateY(-2px);
+}
+
+/* ===== Giỏ hàng ===== */
+
+.cart-btn{
+    background:#28a745;
+    color:white !important;
+}
+
+.cart-btn:hover{
+    background:#218838;
+    transform:translateY(-2px);
+}
+
+/* ===== Đăng xuất ===== */
+
+.logout-btn{
+    background:#f44336;
+    color:white !important;
+}
+
+.logout-btn:hover{
+    background:#d32f2f;
+    transform:translateY(-2px);
+}
+
+</style>
+
+<div class="header">
+
+    <div class="header-top">
+
+        <div class="logo">
+            🌸 SHOP HOA THÚY HẰNG
+        </div>
+
+        <div class="menu">
+
+            <a href="/">Trang chủ</a>
+
+           
+            <!-- <a href="#">Hoa cưới</a>
+
+            <a href="#">Hoa khai trương</a> -->
+
+            <!-- <a href="/cart" class="cart-btn">
+                🛒 Giỏ hàng
+            </a> -->
+
+            <!-- CHƯA ĐĂNG NHẬP -->
+
+            <div th:if="${session.user == null}" class="guest-box">
+
+                <a href="/login" class="login-btn">
+                    Đăng nhập
+                </a>
+
+                <a href="/register" class="register-btn">
+                    Đăng ký
+                </a>
+
+            </div>
+
+            <!-- ĐÃ ĐĂNG NHẬP -->
+
+            <div th:if="${session.user != null}" class="user-box">
+
+                <!-- <a href="/my-orders" class="order-btn">
+                    📦 Đơn hàng
+                </a> -->
+
+                <a href="/profile" class="user-btn">
+                    👤
+                    <span th:text="${session.user.fullName}"></span>
+                </a>
+
+                <a th:if="${session.user.role == 'ADMIN'}"
+   href="/admin"
+   class="order-btn">
+    ⚙️ Quản trị
+</a>
+
+                <a href="/logout" class="logout-btn">
+                    Đăng xuất
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</header>

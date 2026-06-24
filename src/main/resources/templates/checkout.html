@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Thanh toán</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    margin:0;
+    padding:0;
+}
+
+.container{
+    width:800px;
+    margin:30px auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.15);
+}
+
+h1{
+    text-align:center;
+    color:#ff69b4;
+}
+
+input, textarea{
+    width:100%;
+    padding:12px;
+    margin-top:5px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:5px;
+    box-sizing:border-box;
+}
+
+.payment-option{
+    display:block;
+    border:2px solid #ddd;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.payment-option:hover{
+    border-color:#ff69b4;
+    background:#fff0f7;
+}
+
+.payment-option input{
+    width:auto;
+    margin-right:10px;
+}
+
+.bank-info{
+    display:none;
+    margin-top:15px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:20px;
+    background:#fafafa;
+}
+
+.bank-info img{
+    margin-top:15px;
+    border-radius:10px;
+}
+
+.confirm-transfer{
+    display:none;
+    margin-top:15px;
+}
+
+.total-box{
+    margin-top:20px;
+    padding:15px;
+    background:#fff0f7;
+    border-radius:10px;
+    font-size:22px;
+    color:red;
+    font-weight:bold;
+}
+
+.btn{
+    margin-top:20px;
+    background:#28a745;
+    color:white;
+    border:none;
+    padding:15px 25px;
+    font-size:18px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    opacity:0.9;
+}
+
+.back-btn{
+    display:inline-block;
+    margin-top:20px;
+    margin-right:10px;
+    text-decoration:none;
+    background:#ff69b4;
+    color:white;
+    padding:15px 25px;
+    border-radius:5px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>🌸 Thanh toán đơn hàng 🌸</h1>
+
+<form action="/checkout/success" method="post">
+
+    <label>Họ và tên</label>
+    <input type="text"
+           name="customerName"
+           required>
+
+    <label>Số điện thoại</label>
+    <input type="text"
+           name="phone"
+           required>
+
+    <label>Địa chỉ giao hàng</label>
+    <textarea name="address"
+              rows="4"
+              required></textarea>
+
+    <h3>Chọn phương thức thanh toán</h3>
+
+    <label class="payment-option">
+
+        <input type="radio"
+               name="paymentMethod"
+               value="COD"
+               checked>
+
+        💵 Thanh toán khi nhận hàng (COD)
+
+    </label>
+
+    <label class="payment-option">
+
+        <input type="radio"
+               name="paymentMethod"
+               value="BANK">
+
+        🏦 Chuyển khoản ngân hàng
+
+    </label>
+
+    <div id="bankInfo" class="bank-info">
+
+        <h3>Thông tin chuyển khoản</h3>
+
+        <p>
+            <b>Ngân hàng:</b> MB Bank
+        </p>
+
+        <p>
+            <b>Số tài khoản:</b> 123456789
+        </p>
+
+        <p>
+            <b>Chủ tài khoản:</b> Nguyễn Thúy Hằng
+        </p>
+
+        <img src="/images/qr.jpg"
+             width="250">
+
+        <div id="confirmTransfer"
+             class="confirm-transfer">
+
+            <label>
+
+                <input type="checkbox"
+                       id="transferCheck">
+
+                Tôi đã chuyển khoản thành công
+
+            </label>
+
+        </div>
+
+    </div>
+
+    <div class="total-box">
+
+        Tổng thanh toán:
+        <span th:text="${total}"></span>
+        VNĐ
+
+    </div>
+
+    <a href="/cart"
+       class="back-btn">
+
+        🛒 Quay lại giỏ hàng
+
+    </a>
+
+    <button type="submit"
+            class="btn"
+            id="orderBtn">
+
+        Đặt hàng
+
+    </button>
+
+</form>
+
+</div>
+
+<script>
+
+const radios =
+document.querySelectorAll(
+'input[name="paymentMethod"]'
+);
+
+const bankInfo =
+document.getElementById("bankInfo");
+
+const confirmTransfer =
+document.getElementById("confirmTransfer");
+
+const orderBtn =
+document.getElementById("orderBtn");
+
+const transferCheck =
+document.getElementById("transferCheck");
+
+function checkPayment(){
+
+    const selected =
+    document.querySelector(
+        'input[name="paymentMethod"]:checked'
+    ).value;
+
+    if(selected === "BANK"){
+
+        bankInfo.style.display = "block";
+        confirmTransfer.style.display = "block";
+
+        orderBtn.disabled =
+            !transferCheck.checked;
+
+    }
+    else{
+
+        bankInfo.style.display = "none";
+
+        confirmTransfer.style.display = "none";
+
+        orderBtn.disabled = false;
+    }
+}
+
+radios.forEach(r => {
+
+    r.addEventListener(
+        "change",
+        checkPayment
+    );
+
+});
+
+transferCheck.addEventListener(
+    "change",
+    checkPayment
+);
+
+checkPayment();
+
+</script>
+
+</body>
+</html>
