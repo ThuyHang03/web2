@@ -1,87 +1,195 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
 <meta charset="UTF-8">
 <title>Chi tiết đơn hàng</title>
 
 <style>
 
 body{
-    font-family: Arial;
+    font-family:Arial,sans-serif;
     background:#f5f5f5;
     padding:30px;
 }
 
 .container{
-    max-width:1000px;
+    width:900px;
     margin:auto;
     background:white;
-    padding:20px;
+    padding:30px;
     border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
 }
 
 h2{
     margin-bottom:20px;
+    color:#ff69b4;
+}
+
+.info p{
+    margin:10px 0;
+    font-size:16px;
+}
+
+.status{
+    font-weight:bold;
+}
+
+.confirmed{
+    color:green;
+}
+
+.cancelled{
+    color:red;
+}
+
+.waiting{
+    color:orange;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
+    margin-top:25px;
 }
 
 th,td{
     border:1px solid #ddd;
-    padding:10px;
+    padding:12px;
     text-align:center;
 }
 
 th{
-    background:#28a745;
+    background:#ff69b4;
     color:white;
 }
 
 .btn{
+    padding:10px 18px;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:6px;
+    margin-top:20px;
+}
+
+.confirm{
+    background:#28a745;
+}
+
+.cancel{
+    background:#dc3545;
+}
+
+.back{
     display:inline-block;
     margin-top:20px;
-    padding:10px 15px;
-    background:#007bff;
-    color:white;
     text-decoration:none;
-    border-radius:5px;
+    background:#2196f3;
+    color:white;
+    padding:10px 15px;
+    border-radius:6px;
 }
 
 </style>
 
 </head>
+
 <body>
 
 <div class="container">
 
-    <h2>Chi tiết đơn hàng</h2>
+<h2 style="color:red;font-size:40px;">
+TRANG CHI TIẾT MỚI
+</h2>
 
-    <table>
+<div class="info">
 
-        <tr>
-            <th>Sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Giá</th>
-            <th>Thành tiền</th>
-        </tr>
+<p><b>Mã đơn:</b> <span th:text="${order.id}"></span></p>
 
-        <tr th:each="item : ${items}">
-            <td th:text="${item.productName}"></td>
-            <td th:text="${item.quantity}"></td>
-            <td th:text="${#numbers.formatDecimal(item.price,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
-            <td th:text="${#numbers.formatDecimal(item.price * item.quantity,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
-        </tr>
+<p><b>Khách hàng:</b> <span th:text="${order.customerName}"></span></p>
 
-    </table>
+<p><b>SĐT:</b> <span th:text="${order.phone}"></span></p>
 
-    <a href="/admin/orders" class="btn">
-        ← Quay lại
-    </a>
+<p><b>Địa chỉ:</b> <span th:text="${order.address}"></span></p>
+
+<p><b>Phương thức thanh toán:</b> <span th:text="${order.paymentMethod}"></span></p>
+
+<p>
+    <b>Trạng thái:</b>
+
+    <span class="status"
+          th:text="${order.status}"
+          th:classappend="${
+              order.status=='Đã xác nhận'
+              ? ' confirmed'
+              : (order.status=='Đã hủy'
+                    ? ' cancelled'
+                    : ' waiting')
+          }">
+    </span>
+</p>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+    <th>Sản phẩm</th>
+    <th>Số lượng</th>
+    <th>Đơn giá</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr th:each="item : ${items}">
+
+    <td th:text="${item.productName}"></td>
+
+    <td th:text="${item.quantity}"></td>
+
+    <td th:text="${#numbers.formatDecimal(item.price,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<form th:action="@{/admin/orders/confirm/{id}(id=${order.id})}"
+      method="post"
+      style="display:inline;">
+
+    <button type="submit" class="btn confirm">
+        ✔ Xác nhận đơn
+    </button>
+
+</form>
+
+<form th:action="@{/admin/orders/cancel/{id}(id=${order.id})}"
+      method="post"
+      style="display:inline;">
+
+    <button type="submit" class="btn cancel">
+        ✖ Hủy đơn
+    </button>
+
+</form>
+
+<br>
+
+<a href="/admin/orders" class="back">
+    ← Quay lại danh sách
+</a>
 
 </div>
 
 </body>
+
 </html>

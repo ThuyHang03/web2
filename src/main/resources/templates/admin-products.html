@@ -92,66 +92,70 @@ img{
 
     <table>
 
-        <tr>
-            <th>ID</th>
-            <th>Ảnh</th>
-            <th>Tên</th>
-            <th>Giá</th>
-            <th>Giảm giá</th>
-            <th>Thao tác</th>
-        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Ảnh</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Giảm giá</th>
+        <th>Danh mục</th>
+        <th>Sửa</th>
+        <th>Xóa</th>
+    </tr>
 
-        <tr th:each="p : ${products}">
+    <tr th:each="p : ${products}">
 
-    <td th:text="${p.id}"></td>
+        <td th:text="${p.id}"></td>
 
-    <td>
-        <img th:src="@{'/images/' + ${p.image}}">
-    </td>
+        <td>
+            <img th:src="@{'/images/' + ${p.image}}">
+        </td>
 
-    <td th:text="${p.name}"></td>
+        <td th:text="${p.name}"></td>
 
-    <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+        <td th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
 
-<td>
+        <td>
 
-    <span th:if="${p.discountPercent != null && p.discountPercent > 0}"
-          th:text="${p.discountPercent + '%'}"
-          style="
-            background:red;
-            color:white;
-            padding:4px 8px;
-            border-radius:5px;">
-    </span>
+            <span
+                    th:if="${p.discountPercent != null && p.discountPercent > 0}"
+                    th:text="${p.discountPercent + '%'}"
+                    style="background:red;color:white;padding:4px 8px;border-radius:5px;">
+            </span>
 
-    <span th:if="${p.discountPercent == null || p.discountPercent == 0}">
-        Không giảm
-    </span>
+            <span
+                    th:if="${p.discountPercent == null || p.discountPercent == 0}">
+                Không giảm
+            </span>
 
-</td>
+        </td>
 
-<td th:text="${p.category != null ? p.category.name : 'Chưa phân loại'}"></td>
+        <td th:text="${p.category != null ? p.category.name : 'Chưa phân loại'}"></td>
 
-    <td th:text="${p.discountPercent != null ? p.discountPercent + '%' : '0%'}"></td>
+        <td>
 
-    <td>
-        <a class="btn edit"
-           th:href="@{/admin/edit/{id}(id=${p.id})}">
-            Sửa
-        </a>
-    </td>
+            <a class="edit-btn"
+               th:href="@{/admin/products/edit/{id}(id=${p.id})}">
+                Sửa
+            </a>
 
-    <td>
-        <a class="btn delete"
-           th:href="@{/admin/delete/{id}(id=${p.id})}"
-           onclick="return confirm('Bạn có chắc muốn xóa?')">
-            Xóa
-        </a>
-    </td>
+        </td>
 
-</tr>
+        <td>
 
-    </table>
+            <a class="delete-btn"
+               th:href="@{/admin/products/delete/{id}(id=${p.id})}"
+               onclick="return confirm('Bạn có chắc muốn xóa?')">
+
+                Xóa
+
+            </a>
+
+        </td>
+
+    </tr>
+
+</table>
 
 </div>
 

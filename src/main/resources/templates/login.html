@@ -1,81 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Đăng nhập</title>
-
-<style>
-
-body{
-    font-family:Arial;
-    background:#f5f5f5;
-}
-
-.box{
-    width:450px;
-    margin:50px auto;
-    background:white;
-    padding:30px;
-    border-radius:10px;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-}
-
-button{
-    background:#28a745;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    cursor:pointer;
-}
-
-.error{
-    color:red;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+<body class="page-auth">
 
-<div class="box">
+<section class="auth-shell">
+    <div class="auth-visual">
+        <div class="auth-brand">Shop Hoa Thúy Hằng</div>
+        <h1>Đăng nhập để tiếp tục mua sắm</h1>
+        <p>
+            Quay lại để theo dõi đơn hàng, quản lý giỏ hàng và mở ra những lựa chọn hoa phù hợp cho từng dịp.
+        </p>
+        <ul class="auth-points">
+            <li>Thanh toán và đặt hàng thuận tiện hơn</li>
+            <li>Lưu thông tin để mua nhanh ở lần sau</li>
+            <li>Theo dõi trạng thái đơn hàng dễ dàng</li>
+        </ul>
+    </div>
 
-<h2>Đăng nhập</h2>
+    <div class="auth-card">
+        <h2>Đăng nhập</h2>
+        <p class="auth-subtitle">Chào mừng bạn quay lại cửa hàng hoa của chúng tôi.</p>
 
-<p class="error"
-   th:text="${error}">
-</p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
 
-<form action="/login"
-      method="post">
+        <form action="/login" method="post" class="auth-form">
+            <div class="auth-field">
+                <label for="username">Tên đăng nhập</label>
+                <input id="username"
+                       type="text"
+                       name="username"
+                       placeholder="Nhập tên đăng nhập"
+                       required>
+            </div>
 
-<input type="text"
-       name="username"
-       placeholder="Tên đăng nhập"
-       required>
+            <div class="auth-field">
+                <label for="password">Mật khẩu</label>
+                <input id="password"
+                       type="password"
+                       name="password"
+                       placeholder="Nhập mật khẩu"
+                       required>
+            </div>
 
-<input type="password"
-       name="password"
-       placeholder="Mật khẩu"
-       required>
+            <button type="submit" class="auth-submit">Đăng nhập</button>
+        </form>
 
-<button type="submit">
-    Đăng nhập
-</button>
-
-</form>
-
-<br>
-
-<a href="/register">
-    Chưa có tài khoản? Đăng ký
-</a>
-
-</div>
+        <div class="auth-switch">
+            Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>

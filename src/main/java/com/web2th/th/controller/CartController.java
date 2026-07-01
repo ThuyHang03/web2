@@ -1,59 +1,60 @@
 package com.web2th.th.controller;
 
-import com.web2th.th.model.CartItem;
-import com.web2th.th.model.Product;
 import com.web2th.th.repository.ProductRepository;
-import com.web2th.th.model.Order;
-import com.web2th.th.repository.OrderRepository;
-import com.web2th.th.model.User;
-import jakarta.servlet.http.HttpSession;
 
+import com.web2th.th.repository.OrderRepository;
+
+import jakarta.servlet.http.HttpSession;
+import com.web2th.th.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.web2th.th.model.Order;
-import com.web2th.th.model.OrderItem;
+
+import com.web2th.th.entity.CartItem;
+import com.web2th.th.entity.Product;
+import com.web2th.th.entity.User;
 import com.web2th.th.repository.OrderItemRepository;
-import java.time.LocalDateTime;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class CartController {
+   
     @Autowired
-private OrderItemRepository orderItemRepository;
-    
+private OrderRepository orderRepository;
     @Autowired
     private ProductRepository repository;
-    @Autowired
-    private OrderRepository orderRepository;
+   
     // =========================
     // THÊM VÀO GIỎ HÀNG
     // =========================
-@GetMapping("/my-orders")
-public String myOrders(
-        HttpSession session,
-        Model model
-) {
+// @GetMapping("/my-orders")
+// public String myOrders(
+//         HttpSession session,
+//         Model model
+// ) {
 
-    User user =
-            (User) session.getAttribute("user");
+//     User user =
+//             (User) session.getAttribute("user");
 
-    if(user == null){
-        return "redirect:/login";
-    }
+//     if(user == null){
+//         return "redirect:/login";
+//     }
 
-    model.addAttribute(
-            "orders",
-            orderRepository.findByUsername(
-                    user.getUsername()
-            )
-    );
+//     model.addAttribute(
+//             "orders",
+//             orderRepository.findByUsername(
+//                     user.getUsername()
+//             )
+//     );
 
-    return "my-orders";
-}
+//     return "my-orders";
+// }
+
+
     @GetMapping("/cart/add/{id}")
     public String addToCart(
             @PathVariable Long id,
@@ -140,9 +141,6 @@ if(user != null){
         return "cart";
     }
 
-    // =========================
-    // TĂNG SỐ LƯỢNG
-    // =========================
 
     @GetMapping("/cart/increase/{id}")
     public String increaseQuantity(
@@ -171,10 +169,7 @@ if(user != null){
         return "redirect:/cart";
     }
 
-    // =========================
-    // GIẢM SỐ LƯỢNG
-    // =========================
-
+  
     @GetMapping("/cart/decrease/{id}")
     public String decreaseQuantity(
             @PathVariable Long id,
@@ -204,9 +199,7 @@ if(user != null){
         return "redirect:/cart";
     }
 
-    // =========================
-    // XÓA SẢN PHẨM
-    // =========================
+  
 
     @GetMapping("/cart/remove/{id}")
     public String removeProduct(
@@ -229,9 +222,6 @@ if(user != null){
         return "redirect:/cart";
     }
 
-    // =========================
-    // TRANG THANH TOÁN
-    // =========================
 
   @GetMapping("/checkout")
 public String checkout(
@@ -279,81 +269,82 @@ if(user != null){
     // XỬ LÝ ĐẶT HÀNG
     // =========================
 
-   @PostMapping("/checkout/success")
-public String checkoutSuccess(
+//    @PostMapping("/checkout/success")
+// public String checkoutSuccess(
 
-        @RequestParam String customerName,
-        @RequestParam String phone,
-        @RequestParam String address,
-        @RequestParam String paymentMethod,
+//         @RequestParam String customerName,
+//         @RequestParam String phone,
+//         @RequestParam String address,
+//         @RequestParam String paymentMethod,
 
-        HttpSession session
-) {
+//         HttpSession session
+// ) {
 
-    User user =
-            (User) session.getAttribute("user");
+//     User user =
+//             (User) session.getAttribute("user");
 
-    List<CartItem> cart =
-            (List<CartItem>) session.getAttribute("cart");
+//     List<CartItem> cart =
+//             (List<CartItem>) session.getAttribute("cart");
 
-    double total = 0;
+//     double total = 0;
 
-    if(cart != null){
+//     if(cart != null){
 
-        for(CartItem item : cart){
-            total += item.getTotalPrice();
-        }
-    }
+//         for(CartItem item : cart){
+//             total += item.getTotalPrice();
+//         }
+//     }
 
-    Order order = new Order();
+//     Order order = new Order();
 
-    order.setCustomerName(customerName);
-    order.setPhone(phone);
-    order.setAddress(address);
-    order.setPaymentMethod(paymentMethod);
-    if(paymentMethod.equals("COD")){
-    order.setPaymentStatus("Chưa thanh toán");
-}else{
-    order.setPaymentStatus("Đang chờ VNPay");
-}
-    order.setTotal(total);
+//     order.setCustomerName(customerName);
+//     order.setPhone(phone);
+//     order.setAddress(address);
+//     order.setPaymentMethod(paymentMethod);
+//     if(paymentMethod.equals("COD")){
+//     order.setPaymentStatus("Chưa thanh toán");
+// }else{
+//     order.setPaymentStatus("Đang chờ VNPay");
+//     order.setStatus("Chờ xác nhận");
+// }
+//     order.setTotal(total);
 
-    if(user != null){
-        order.setUsername(user.getUsername());
-    }
+//     if(user != null){
+//         order.setUsername(user.getUsername());
+//     }
 
-    order.setOrderDate(LocalDateTime.now());
+//     order.setOrderDate(LocalDateTime.now());
 
-orderRepository.save(order);
+// orderRepository.save(order);
 
-if(cart != null){
+// if(cart != null){
 
-    for(CartItem item : cart){
+//     for(CartItem item : cart){
 
-        OrderItem orderItem = new OrderItem();
+//         OrderItem orderItem = new OrderItem();
 
-        orderItem.setOrderId(order.getId());
+//         orderItem.setOrderId(order.getId());
 
-        orderItem.setProductName(
-                item.getProduct().getName()
-        );
+//         orderItem.setProductName(
+//                 item.getProduct().getName()
+//         );
 
-        orderItem.setQuantity(
-                item.getQuantity()
-        );
+//         orderItem.setQuantity(
+//                 item.getQuantity()
+//         );
 
-        orderItem.setPrice(
-                item.getProduct().getPrice()
-        );
+//         orderItem.setPrice(
+//                 item.getProduct().getPrice()
+//         );
 
-        orderItemRepository.save(orderItem);
-    }
-}
+//         orderItemRepository.save(orderItem);
+//     }
+// }
 
-    session.removeAttribute("cart");
+//     session.removeAttribute("cart");
 
-    return "success";
-}
+//     return "success";
+// }
 
 
 }

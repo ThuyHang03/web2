@@ -2,172 +2,817 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý sản phẩm</title>
-
+    <title>Dashboard quản trị</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-
-        body{
-            font-family: Arial, sans-serif;
-            padding: 30px;
+        :root {
+            --bg: #fff7f9;
+            --panel: rgba(255, 255, 255, 0.88);
+            --panel-strong: #ffffff;
+            --border: rgba(214, 106, 132, 0.14);
+            --text: #4b2f39;
+            --muted: #8a6670;
+            --primary: #e85d75;
+            --primary-soft: rgba(232, 93, 117, 0.1);
+            --success: #2fa66b;
+            --warning: #e7a11e;
+            --danger: #d94b5b;
+            --info: #4c7df0;
+            --shadow: 0 18px 40px rgba(152, 72, 93, 0.12);
+            --shadow-soft: 0 10px 24px rgba(152, 72, 93, 0.08);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
         }
 
-        table{
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                    radial-gradient(circle at top left, rgba(255, 192, 203, 0.25), transparent 28%),
+                    radial-gradient(circle at top right, rgba(255, 227, 233, 0.9), transparent 28%),
+                    linear-gradient(180deg, #fffafc 0%, #fff5f8 100%);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .admin-shell {
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 22px;
+            background: linear-gradient(180deg, #5b2f3e 0%, #3b1f2a 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            box-shadow: 10px 0 30px rgba(75, 47, 57, 0.12);
+        }
+
+        .brand {
+            padding: 18px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 24px;
+            line-height: 1.15;
+        }
+
+        .brand p {
+            margin: 8px 0 0;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .main {
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .page-title h2 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(28px, 3vw, 42px);
+            line-height: 1.1;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .top-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            font-weight: 700;
+            border: 1px solid transparent;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #ff8aa0);
+            color: #fff;
+        }
+
+        .btn-soft {
+            background: rgba(232, 93, 117, 0.09);
+            color: var(--primary);
+            border-color: rgba(232, 93, 117, 0.14);
+        }
+
+        .btn-dark {
+            background: linear-gradient(135deg, #5c6cff, #7a7cff);
+            color: #fff;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card,
+        .panel,
+        .quick-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card {
+            padding: 18px;
+        }
+
+        .stat-label {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        .stat-note {
+            margin: 10px 0 0;
+            color: #8b6f76;
+            font-size: 12px;
+        }
+
+        .stat-card.primary {
+            background: linear-gradient(180deg, rgba(232, 93, 117, 0.11), rgba(255, 255, 255, 0.95));
+        }
+
+        .stat-card.success {
+            background: linear-gradient(180deg, rgba(47, 166, 107, 0.12), rgba(255, 255, 255, 0.95));
+        }
+
+        .stat-card.info {
+            background: linear-gradient(180deg, rgba(76, 125, 240, 0.12), rgba(255, 255, 255, 0.95));
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(180deg, rgba(231, 161, 30, 0.12), rgba(255, 255, 255, 0.95));
+        }
+
+        .stat-card.danger {
+            background: linear-gradient(180deg, rgba(217, 75, 91, 0.12), rgba(255, 255, 255, 0.95));
+        }
+
+        .stat-card.soft {
+            background: linear-gradient(180deg, rgba(168, 104, 172, 0.11), rgba(255, 255, 255, 0.95));
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .panel {
+            padding: 22px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .panel-header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .chart-wrap {
+            height: 340px;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .quick-card {
+            padding: 18px;
+        }
+
+        .quick-card strong {
+            display: block;
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .quick-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .quick-card .mini-btn {
+            display: inline-flex;
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(232, 93, 117, 0.08);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .table-panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .table-head {
+            padding: 20px 22px 0;
+        }
+
+        .table-head h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .table-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 16px;
         }
 
-        th, td{
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
+        thead th {
+            text-align: left;
+            font-size: 13px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #6d535c;
+            background: rgba(232, 93, 117, 0.06);
+            padding: 14px 18px;
         }
 
-        img{
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
+        tbody td {
+            padding: 16px 18px;
+            border-top: 1px solid rgba(214, 106, 132, 0.1);
+            vertical-align: middle;
         }
 
-        .btn{
-            padding: 8px 15px;
-            text-decoration: none;
-            color: white;
-            border-radius: 5px;
-            display: inline-block;
+        tbody tr:hover {
+            background: rgba(232, 93, 117, 0.035);
         }
 
-        .edit{
-            background: orange;
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 110px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff;
         }
 
-        .delete{
-            background: red;
+        .status.pending {
+            background: linear-gradient(135deg, #f0b429, #f8c14a);
+            color: #4e3600;
         }
 
-        .add{
-            background: green;
-            padding: 10px 20px;
+        .status.confirmed {
+            background: linear-gradient(135deg, #28a745, #48c774);
         }
 
-        .search-box{
-            margin-bottom: 20px;
+        .status.canceled {
+            background: linear-gradient(135deg, #dc3545, #ef6573);
         }
 
-        .search-box input{
-            padding: 8px;
-            width: 250px;
+        .two-columns {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 18px;
+            margin-bottom: 18px;
         }
 
-        .search-box button{
-            padding: 8px 15px;
-            cursor: pointer;
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
+        .mini-table td,
+        .mini-table th {
+            padding: 12px 0;
+            border-top: 1px solid rgba(214, 106, 132, 0.1);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .mini-meta {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .mini-price {
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .badge-soft {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: rgba(232, 93, 117, 0.09);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1280px) {
+            .grid-stats {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .section-grid,
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .admin-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                height: auto;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .top-actions {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .main {
+                padding: 16px;
+            }
+
+            .grid-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel,
+            .table-head,
+            .stat-card,
+            .quick-card {
+                border-radius: 20px;
+            }
+
+            tbody td,
+            thead th {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+        }
     </style>
-
 </head>
-
 <body>
-    <a href="/admin/users" class="admin-btn">
-    👥 Quản lý khách hàng
-</a>
-<a href="/admin/orders" style="color:black;">
-    📦 Quản lý đơn hàng
-</a>
-<!-- <a href="/admin/orders" class="btn ">
-    📦 Quản lý đơn hàng
-</a> -->
 
-<h1>Quản lý sản phẩm</h1>
+<div class="admin-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <h1>Shop Hoa Thúy Hằng</h1>
+            <p>Trang quản trị tập trung vào số liệu, sản phẩm, khách hàng và đơn hàng.</p>
+        </div>
 
-<form action="/admin/search"
-      method="get"
-      class="search-box">
+        <nav class="sidebar-nav">
+            <a href="/admin" class="active">Dashboard</a>
+            <a href="/admin/products">Quản lý sản phẩm</a>
+            <a href="/admin/users">Quản lý khách hàng</a>
+            <a href="/admin/orders">Quản lý đơn hàng</a>
+            <a href="/">Về trang chủ</a>
+        </nav>
 
-    <input type="text"
-           name="keyword"
-           placeholder="Nhập tên hoa...">
+        <div class="sidebar-footer">
+            <div><strong>Gợi ý thao tác nhanh</strong></div>
+            <div>Kiểm tra đơn chờ, xem doanh thu và cập nhật sản phẩm mới mỗi ngày.</div>
+        </div>
+    </aside>
 
-    <button type="submit">
-        Tìm kiếm
-    </button>
+    <main class="main">
+        <div class="topbar">
+            <div class="page-title">
+                <h2>Dashboard quản trị</h2>
+                <p>Toàn bộ số liệu quan trọng của cửa hàng trong một màn hình.</p>
+            </div>
 
-    <a href="/admin">
-        <button type="button">
-            Hiện tất cả
-        </button>
-    </a>
+            <div class="top-actions">
+                <a href="/admin/products/add" class="btn btn-primary">+ Thêm sản phẩm</a>
+                <a href="/admin/orders" class="btn btn-soft">Xem đơn hàng</a>
+                <a href="/" class="btn btn-dark">Trang chủ</a>
+            </div>
+        </div>
 
-</form>
+        <section class="grid-stats">
+            <div class="stat-card primary">
+                <p class="stat-label">Tổng sản phẩm</p>
+                <p class="stat-value" th:text="${productCount}"></p>
+                <p class="stat-note">Quản lý kho hoa và quà tặng</p>
+            </div>
+            <div class="stat-card success">
+                <p class="stat-label">Khách hàng</p>
+                <p class="stat-value" th:text="${userCount}"></p>
+                <p class="stat-note">Tài khoản đã đăng ký</p>
+            </div>
+            <div class="stat-card info">
+                <p class="stat-label">Đơn hàng</p>
+                <p class="stat-value" th:text="${orderCount}"></p>
+                <p class="stat-note">Tổng số đơn tiếp nhận</p>
+            </div>
+            <div class="stat-card warning">
+                <p class="stat-label">Doanh thu</p>
+                <p class="stat-value" th:text="${#numbers.formatDecimal(revenue,0,'COMMA',0,'POINT')} + ' đ'"></p>
+                <p class="stat-note">Chỉ tính đơn đã xác nhận</p>
+            </div>
+            <div class="stat-card danger">
+                <p class="stat-label">Đơn chờ xử lý</p>
+                <p class="stat-value" th:text="${pendingOrderCount}"></p>
+                <p class="stat-note">Cần duyệt trong ngày</p>
+            </div>
+            <div class="stat-card soft">
+                <p class="stat-label">Sản phẩm giảm giá</p>
+                <p class="stat-value" th:text="${discountedProductCount}"></p>
+                <p class="stat-note">Đang chạy ưu đãi</p>
+            </div>
+        </section>
 
-<a href="/admin/add" class="btn add">
-    ➕ Thêm sản phẩm
-</a>
+        <section class="section-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Biểu đồ tổng quan</h3>
+                        <p>So sánh sản phẩm, khách hàng và đơn hàng.</p>
+                    </div>
+                    <span class="badge-soft">Cập nhật theo dữ liệu hiện tại</span>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="overviewChart"></canvas>
+                </div>
+            </div>
 
-<table>
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Thao tác nhanh</h3>
+                        <p>Vào đúng chức năng bạn hay dùng nhất.</p>
+                    </div>
+                </div>
 
-    <tr>
-        <th>ID</th>
-        <th>Ảnh</th>
-        <th>Tên</th>
-        <th>Giá</th>
-        <th>Giảm giá</th>
-        <th>Danh mục</th>
-        <th>Sửa</th>
-        <th>Xóa</th>
-    </tr>
+                <div class="quick-grid">
+                    <div class="quick-card">
+                        <strong>Thêm hoa mới</strong>
+                        <span>Đăng sản phẩm, giá bán, ảnh và khuyến mãi chỉ trong vài bước.</span>
+                        <a class="mini-btn" href="/admin/products/add">Mở form thêm</a>
+                    </div>
+                    <div class="quick-card">
+                        <strong>Xử lý đơn hàng</strong>
+                        <span>Xem danh sách đơn chờ, xác nhận và cập nhật trạng thái.</span>
+                        <a class="mini-btn" href="/admin/orders">Đi tới đơn hàng</a>
+                    </div>
+                    <div class="quick-card">
+                        <strong>Quản lý khách</strong>
+                        <span>Theo dõi tài khoản mới và thông tin người dùng.</span>
+                        <a class="mini-btn" href="/admin/users">Mở danh sách khách</a>
+                    </div>
+                    <div class="quick-card">
+                        <strong>Trang bán hàng</strong>
+                        <span>Kiểm tra giao diện khách xem và nội dung đang hiển thị.</span>
+                        <a class="mini-btn" href="/">Xem trang chủ</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <tr th:each="p : ${products}">
+        <section class="two-columns">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Trạng thái đơn hàng</h3>
+                        <p>Đơn chờ, đã xác nhận và đã hủy.</p>
+                    </div>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
 
-        <td th:text="${p.id}"></td>
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Chỉ số nhanh</h3>
+                        <p>Tóm tắt để bạn đọc số liệu trong 3 giây.</p>
+                    </div>
+                </div>
 
-        <td>
-            <img th:src="@{'/images/' + ${p.image}}">
-        </td>
+                <table class="mini-table">
+                    <tr>
+                        <th>Đơn chờ</th>
+                        <td th:text="${pendingOrderCount}"></td>
+                    </tr>
+                    <tr>
+                        <th>Đã xác nhận</th>
+                        <td th:text="${confirmedOrderCount}"></td>
+                    </tr>
+                    <tr>
+                        <th>Đã hủy</th>
+                        <td th:text="${canceledOrderCount}"></td>
+                    </tr>
+                    <tr>
+                        <th>Sản phẩm ưu đãi</th>
+                        <td th:text="${discountedProductCount}"></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
 
-        <td th:text="${p.name}"></td>
+        <section class="table-panel">
+            <div class="table-head">
+                <h3>Đơn hàng mới nhất</h3>
+                <p>Theo dõi khách vừa đặt và trạng thái xử lý.</p>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Khách hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Tổng tiền</th>
+                    <th>Ngày đặt</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${recentOrders}">
+                    <td th:text="${o.id}"></td>
+                    <td>
+                        <div th:text="${o.customerName}"></div>
+                        <div class="mini-meta" th:text="${o.username}"></div>
+                    </td>
+                    <td th:text="${o.phone}"></td>
+                    <td class="mini-price" th:text="${#numbers.formatDecimal(o.total,0,'COMMA',0,'POINT')} + ' đ'"></td>
+                    <td th:text="${o.orderDate != null ? #temporals.format(o.orderDate,'dd/MM/yyyy HH:mm') : 'Chưa có'}"></td>
+                    <td>
+                        <span class="status"
+                              th:classappend="${o.status=='Đã xác nhận'} ? ' confirmed' : (${o.status=='Đã hủy'} ? ' canceled' : ' pending')"
+                              th:text="${o.status}">
+                        </span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recentOrders)}">
+                    <td colspan="6">Chưa có đơn hàng nào.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
 
-       <td th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+        <section class="two-columns">
+            <div class="table-panel">
+                <div class="table-head">
+                    <h3>Sản phẩm mới gần đây</h3>
+                    <p>5 sản phẩm vừa được đưa vào hệ thống.</p>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Giảm giá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${recentProducts}">
+                        <td>
+                            <div th:text="${p.name}"></div>
+                            <div class="mini-meta" th:text="${p.description}"></div>
+                        </td>
+                        <td th:text="${p.category != null ? p.category.name : 'Chưa có'}"></td>
+                        <td class="mini-price" th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'"></td>
+                        <td th:text="${p.discountPercent != null && p.discountPercent > 0 ? '-' + p.discountPercent + '%' : '0%'}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentProducts)}">
+                        <td colspan="4">Chưa có sản phẩm nào.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-<td>
+            <div class="table-panel">
+                <div class="table-head">
+                    <h3>Người dùng mới</h3>
+                    <p>Danh sách tài khoản vừa tạo gần đây.</p>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Tài khoản</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${recentUsers}">
+                        <td th:text="${u.username}"></td>
+                        <td th:text="${u.fullName}"></td>
+                        <td th:text="${u.email}"></td>
+                        <td>
+                            <span class="badge-soft" th:text="${u.role}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentUsers)}">
+                        <td colspan="4">Chưa có người dùng nào.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
 
-    <span th:if="${p.discountPercent != null && p.discountPercent > 0}"
-          th:text="${p.discountPercent + '%'}"
-          style="
-            background:red;
-            color:white;
-            padding:4px 8px;
-            border-radius:5px;">
-    </span>
+<script th:inline="javascript">
+    const productCount = /*[[${productCount}]]*/ 0;
+    const userCount = /*[[${userCount}]]*/ 0;
+    const orderCount = /*[[${orderCount}]]*/ 0;
+    const pendingOrderCount = /*[[${pendingOrderCount}]]*/ 0;
+    const confirmedOrderCount = /*[[${confirmedOrderCount}]]*/ 0;
+    const canceledOrderCount = /*[[${canceledOrderCount}]]*/ 0;
+    const discountedProductCount = /*[[${discountedProductCount}]]*/ 0;
 
-    <span th:if="${p.discountPercent == null || p.discountPercent == 0}">
-        Không giảm
-    </span>
+    const overviewCtx = document.getElementById("overviewChart");
+    if (overviewCtx) {
+        new Chart(overviewCtx, {
+            type: "bar",
+            data: {
+                labels: ["Sản phẩm", "Khách hàng", "Đơn hàng", "Giảm giá"],
+                datasets: [{
+                    label: "Số lượng",
+                    data: [productCount, userCount, orderCount, discountedProductCount],
+                    backgroundColor: ["#e85d75", "#4c7df0", "#2fa66b", "#e7a11e"],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
 
-</td>
-
-<td th:text="${p.category != null ? p.category.name : 'Chưa phân loại'}"></td>
-
-        <td>
-          <a class="btn edit"
-   th:href="@{/admin/edit/{id}(id=${p.id})}">
-    Sửa
-</a>
-        </td>
-
-        <td>
-            <a class="btn delete"
-       th:href="@{/admin/delete/{id}(id=${p.id})}"
-       onclick="return confirm('Bạn có chắc muốn xóa?')">
-        Xóa
-    </a>
-        </td>
-
-    </tr>
-
-</table>
+    const statusCtx = document.getElementById("statusChart");
+    if (statusCtx) {
+        new Chart(statusCtx, {
+            type: "doughnut",
+            data: {
+                labels: ["Chờ xác nhận", "Đã xác nhận", "Đã hủy"],
+                datasets: [{
+                    data: [pendingOrderCount, confirmedOrderCount, canceledOrderCount],
+                    backgroundColor: ["#f0b429", "#2fa66b", "#d94b5b"],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+    }
+</script>
 
 </body>
 </html>

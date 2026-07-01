@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.web2th.th.model.Order;
+import com.web2th.th.entity.Order;
 
 public interface OrderRepository
         extends JpaRepository<Order, Long> {

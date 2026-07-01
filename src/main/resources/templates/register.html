@@ -1,83 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Đăng ký</title>
-
-<style>
-
-body{
-    font-family:Arial;
-    background:#f5f5f5;
-}
-
-.box{
-    width:450px;
-    margin:50px auto;
-    background:white;
-    padding:30px;
-    border-radius:10px;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-}
-
-button{
-    background:#ff69b4;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    cursor:pointer;
-}
-
-.error{
-    color:red;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+<body class="page-auth">
 
-<div class="box">
+<section class="auth-shell">
+    <div class="auth-visual">
+        <div class="auth-brand">Shop Hoa Thúy Hằng</div>
+        <h1>Tạo tài khoản để lưu lựa chọn yêu thích</h1>
+        <p>
+            Đăng ký chỉ mất vài giây, nhưng giúp bạn mua nhanh hơn, quản lý đơn tốt hơn và nhận được trải nghiệm nhất quán.
+        </p>
+        <ul class="auth-points">
+            <li>Lưu thông tin người nhận và lịch sử mua hàng</li>
+            <li>Nhận ưu đãi, gợi ý sản phẩm và thông báo mới</li>
+            <li>Đặt hoa nhanh cho sinh nhật, khai trương, cưới hỏi</li>
+        </ul>
+    </div>
 
-<h2>Đăng ký tài khoản</h2>
+    <div class="auth-card">
+        <h2>Đăng ký tài khoản</h2>
+        <p class="auth-subtitle">Điền thông tin bên dưới để bắt đầu hành trình mua sắm.</p>
 
-<p class="error" th:text="${error}"></p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
 
-<form action="/register" method="post">
+        <form action="/register" method="post" class="auth-form">
+            <div class="auth-field">
+                <label for="fullName">Họ và tên</label>
+                <input id="fullName"
+                       type="text"
+                       name="fullName"
+                       placeholder="Nhập họ và tên"
+                       required>
+            </div>
 
-<input type="text"
-       name="fullName"
-       placeholder="Họ và tên"
-       required>
+            <div class="auth-field">
+                <label for="username">Tên đăng nhập</label>
+                <input id="username"
+                       type="text"
+                       name="username"
+                       placeholder="Chọn tên đăng nhập"
+                       required>
+            </div>
 
-<input type="text"
-       name="username"
-       placeholder="Tên đăng nhập"
-       required>
+            <div class="auth-field">
+                <label for="password">Mật khẩu</label>
+                <input id="password"
+                       type="password"
+                       name="password"
+                       placeholder="Tạo mật khẩu"
+                       required>
+            </div>
 
-<input type="password"
-       name="password"
-       placeholder="Mật khẩu"
-       required>
+            <button type="submit" class="auth-submit">Đăng ký</button>
+        </form>
 
-<button type="submit">
-    Đăng ký
-</button>
-
-</form>
-
-<br>
-
-<a href="/login">
-    Đã có tài khoản? Đăng nhập
-</a>
-
-</div>
+        <div class="auth-switch">
+            Đã có tài khoản? <a href="/login">Đăng nhập ngay</a>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>

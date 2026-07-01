@@ -1,7 +1,8 @@
 package com.web2th.th.repository;
 
-import com.web2th.th.model.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.web2th.th.entity.OrderItem;
 
 import java.util.List;
 

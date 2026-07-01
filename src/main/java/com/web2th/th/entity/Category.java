@@ -36,7 +36,7 @@
 //     }
 
 // }
-package com.web2th.th.model;
+package com.web2th.th.entity;
 
 import jakarta.persistence.*;
 

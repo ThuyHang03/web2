@@ -1,138 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Giỏ hàng</title>
-
-<style>
-
-body{
-    font-family:Arial;
-    background:#f5f5f5;
-}
-
-.container{
-    width:900px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    margin-top:30px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    border:1px solid #ddd;
-    padding:10px;
-}
-
-th{
-    background:#ff69b4;
-    color:white;
-}
-
-.total{
-    margin-top:20px;
-    font-size:24px;
-    color:red;
-    font-weight:bold;
-}
-
-.btn{
-    display:inline-block;
-    margin-top:20px;
-    background:#28a745;
-    color:white;
-    padding:10px 15px;
-    text-decoration:none;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<body>
+<body class="page-cart">
 
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="container">
 
-<h1>🛒 Giỏ hàng</h1>
+<main class="cart-shell">
+    <section class="cart-card">
+        <div class="section-heading">
+            <div>
+                <div class="section-kicker">Danh sách của bạn</div>
+                <h1>Giỏ hàng</h1>
+            </div>
+            <a href="/" class="btn-ghost">Tiếp tục mua hàng</a>
+        </div>
 
-<table>
+        <div class="cart-table-wrap" th:if="${cart != null && !cart.isEmpty()}">
+            <table class="cart-table">
+                <thead>
+                <tr>
+                    <th>Tên hoa</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cart}">
+                    <td th:text="${item.product.name}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.product.price,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+                    <td>
+                        <div class="qty-control">
+                            <a th:href="@{'/cart/decrease/' + ${item.product.id}}" aria-label="Giảm số lượng">−</a>
+                            <span th:text="${item.quantity}"></span>
+                            <a th:href="@{'/cart/increase/' + ${item.product.id}}" aria-label="Tăng số lượng">+</a>
+                        </div>
+                    </td>
+                    <td th:text="${#numbers.formatDecimal(item.totalPrice,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+                    <td>
+                        <a th:href="@{'/cart/remove/' + ${item.product.id}}" class="cart-link danger">
+                            Xóa
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-<tr>
-    <th>Tên hoa</th>
-    <th>Giá</th>
-    <th>Số lượng</th>
-    <th>Thành tiền</th>
-    <th>Thao tác</th>
-</tr>
+        <div class="empty-state" th:if="${cart == null || cart.isEmpty()}">
+            Giỏ hàng của bạn đang trống. Hãy chọn vài bó hoa thật đẹp nhé.
+        </div>
 
-<tr th:each="item : ${cart}">
+        <div class="cart-summary">
+            <div class="total-box">
+                <span>Tổng tiền</span>
+                <strong th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' VNĐ'"></strong>
+            </div>
 
-    <td th:text="${item.product.name}"></td>
+            <div class="cart-actions">
+                <a href="/my-orders" class="btn-secondary">
+                    Đơn hàng (<span th:text="${orderCount} ?: 0"></span>)
+                </a>
+                <a href="/checkout" class="btn-primary">
+                    Thanh toán
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
 
-    <td th:text="${item.product.price} + ' VNĐ'"></td>
-
-    <td>
-
-        <a th:href="@{'/cart/decrease/' + ${item.product.id}}">
-            ➖
-        </a>
-
-        <span th:text="${item.quantity}"></span>
-
-        <a th:href="@{'/cart/increase/' + ${item.product.id}}">
-            ➕
-        </a>
-
-    </td>
-
-    <td th:text="${item.totalPrice} + ' VNĐ'"></td>
-
-    <td>
-
-        <a th:href="@{'/cart/remove/' + ${item.product.id}}">
-            ❌ Xóa
-        </a>
-
-    </td>
-
-</tr>
-</table>
-
-<div class="total">
-    Tổng tiền:
-    <span th:text="${total}"></span>
-    VNĐ
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</div>
-
-<div style="margin-top:20px;">
-
-    <a href="/"
-       class="btn"
-       style="background:#28a745;">
-        🛍️ Tiếp tục mua hàng
-    </a>
-
-    <a href="/checkout"
-       class="btn"
-       style="background:#ff69b4;">
-        💳 Thanh toán
-    </a>
-    <a href="/my-orders"
-   class="order-btn">
-    📦 Đơn hàng
-    (<span th:text="${orderCount} ?: 0"></span>)
-</a>
-
-</div>
-
-</div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.web2th.th.repository;
 
-import com.web2th.th.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.web2th.th.entity.Product;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

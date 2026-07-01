@@ -1,6 +1,6 @@
 package com.web2th.th.controller;
 
-import com.web2th.th.model.User;
+import com.web2th.th.entity.User;
 import com.web2th.th.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -99,9 +99,8 @@ public class LoginController {
         return "redirect:/";
     }
 
-    // ======================
     // LOGOUT
-    // ======================
+
 
     @GetMapping("/logout")
     public String logout(

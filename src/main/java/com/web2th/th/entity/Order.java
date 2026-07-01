@@ -1,4 +1,4 @@
-package com.web2th.th.model;
+package com.web2th.th.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -22,7 +22,10 @@ public class Order {
     private Double total;
 
     private String username;
+    
     private LocalDateTime orderDate;
+    @Column(name = "status")
+private String status = "Chờ xác nhận";
     private String paymentMethod;
 
 private String paymentStatus = "Chưa thanh toán";
@@ -92,6 +95,13 @@ public LocalDateTime getOrderDate() {
 
 public void setOrderDate(LocalDateTime orderDate) {
     this.orderDate = orderDate;
+}
+public String getStatus() {
+    return status;
+}
+
+public void setStatus(String status) {
+    this.status = status;
 }
 public String getPaymentStatus() {
     return paymentStatus;

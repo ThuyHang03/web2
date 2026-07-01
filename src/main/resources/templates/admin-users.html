@@ -1,106 +1,267 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<title>Quản lý khách hàng</title>
 
-<style>
+    <meta charset="UTF-8">
+    <title>Quản lý khách hàng</title>
 
-body{
-    font-family:Arial;
-    background:#f5f5f5;
-    padding:30px;
-}
+    <style>
 
-h1{
-    color:#ff69b4;
-}
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
 
-table{
-    width:100%;
-    background:white;
-    border-collapse:collapse;
-    margin-top:20px;
-}
+        body{
+            background:#f4f6f9;
+        }
 
-th,td{
-    border:1px solid #ddd;
-    padding:12px;
-    text-align:center;
-}
+        .wrapper{
+            display:flex;
+            min-height:100vh;
+        }
 
-th{
-    background:#ff69b4;
-    color:white;
-}
+        /* Sidebar */
 
-.btn-delete{
-    background:red;
-    color:white;
-    padding:8px 12px;
-    text-decoration:none;
-    border-radius:5px;
-}
+        .sidebar{
 
-.btn-back{
-    display:inline-block;
-    margin-top:20px;
-    padding:10px 15px;
-    background:#2196f3;
-    color:white;
-    text-decoration:none;
-    border-radius:5px;
-}
+            width:240px;
+            background:#2c3e50;
+            color:white;
 
-</style>
+        }
+
+        .logo{
+
+            padding:25px;
+            text-align:center;
+            font-size:22px;
+            font-weight:bold;
+            border-bottom:1px solid rgba(255,255,255,.1);
+
+        }
+
+        .sidebar a{
+
+            display:block;
+            color:white;
+            text-decoration:none;
+            padding:18px 25px;
+            transition:.3s;
+
+        }
+
+        .sidebar a:hover{
+
+            background:#34495e;
+
+        }
+
+        .active{
+
+            background:#34495e;
+
+        }
+
+        /* Content */
+
+        .content{
+
+            flex:1;
+            padding:30px;
+
+        }
+
+        h1{
+
+            margin-bottom:10px;
+            color:#333;
+
+        }
+
+        .info{
+
+            margin-bottom:20px;
+            color:#666;
+
+        }
+
+        table{
+
+            width:100%;
+            background:white;
+            border-collapse:collapse;
+            border-radius:10px;
+            overflow:hidden;
+            box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+        }
+
+        th{
+
+            background:#ff69b4;
+            color:white;
+            padding:15px;
+
+        }
+
+        td{
+
+            padding:15px;
+            text-align:center;
+            border-bottom:1px solid #eee;
+
+        }
+
+        tr:hover{
+
+            background:#fafafa;
+
+        }
+
+        .role-admin{
+
+            background:#28a745;
+            color:white;
+            padding:5px 10px;
+            border-radius:20px;
+
+        }
+
+        .role-user{
+
+            background:#6c757d;
+            color:white;
+            padding:5px 10px;
+            border-radius:20px;
+
+        }
+
+        .delete-btn{
+
+            background:#dc3545;
+            color:white;
+            text-decoration:none;
+            padding:8px 14px;
+            border-radius:6px;
+
+        }
+
+        .delete-btn:hover{
+
+            background:#bb2d3b;
+
+        }
+
+    </style>
 
 </head>
+
 <body>
 
-<h1>👥 Quản lý khách hàng</h1>
+<div class="wrapper">
 
-<table>
+    <!-- Sidebar -->
 
-<tr>
-    <th>ID</th>
-    <th>Họ tên</th>
-    <th>Tài khoản</th>
-    <th>Email</th>
-    <th>Vai trò</th>
-    <th>Thao tác</th>
-</tr>
+    <div class="sidebar">
 
-<tr th:each="u : ${users}">
+        <div class="logo">
+            🌸 FLOWER SHOP
+        </div>
 
-    <td th:text="${u.id}"></td>
-
-    <td th:text="${u.fullName}"></td>
-
-    <td th:text="${u.username}"></td>
-
-    <td th:text="${u.email}"></td>
-
-    <td th:text="${u.role}"></td>
-
-    <td>
-
-        <a th:href="@{'/admin/user/delete/' + ${u.id}}"
-           class="btn-delete"
-           onclick="return confirm('Xóa khách hàng này?')">
-
-            Xóa
-
+        <a href="/admin">
+            🏠 Dashboard
         </a>
 
-    </td>
+        <a href="/admin/products">
+            🌷 Quản lý sản phẩm
+        </a>
 
-</tr>
+        <a href="/admin/users" class="active">
+            👥 Quản lý khách hàng
+        </a>
 
-</table>
+        <a href="/admin/orders">
+            📦 Quản lý đơn hàng
+        </a>
 
-<a href="/admin" class="btn-back">
-    ← Quay lại Admin
-</a>
+    </div>
+
+    <!-- Content -->
+
+    <div class="content">
+
+        <h1>👥 Quản lý khách hàng</h1>
+
+        <p class="info">
+            Tổng khách hàng:
+            <b th:text="${users.size()}"></b>
+        </p>
+
+        <table>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Tài khoản</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Thao tác</th>
+
+            </tr>
+
+            <tr th:each="u : ${users}">
+
+                <td th:text="${u.id}"></td>
+
+                <td th:text="${u.fullName}"></td>
+
+                <td th:text="${u.username}"></td>
+
+                <td th:text="${u.email}"></td>
+
+                <td>
+
+                    <span th:if="${u.role=='ADMIN'}"
+                          class="role-admin">
+
+                        ADMIN
+
+                    </span>
+
+                    <span th:if="${u.role!='ADMIN'}"
+                          class="role-user">
+
+                        USER
+
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <a class="delete-btn"
+                       th:href="@{/admin/users/delete/{id}(id=${u.id})}"
+                       onclick="return confirm('Bạn có chắc muốn xóa khách hàng này?')">
+
+                        Xóa
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
 
 </body>
+
 </html>

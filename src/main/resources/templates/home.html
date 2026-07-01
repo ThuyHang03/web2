@@ -1,417 +1,287 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>Shop Hoa Thúy Hằng</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        /* Slider */
-
-        .slider {
-            position: relative;
-            width: 90%;
-            max-width: 1400px;
-            height: 420px;
-            margin: 25px auto;
-            overflow: hidden;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .slide {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        .slide.active {
-            opacity: 1;
-        }
-
-        /* Search */
-
-        .search-box {
-            width: 90%;
-            max-width: 1400px;
-            margin: 0 auto 25px;
-            background: white;
-            padding: 18px;
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .search-box form {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .search-box input {
-            flex: 1;
-            min-width: 250px;
-            padding: 14px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            outline: none;
-        }
-
-        .search-box button,
-        .cart-btn,
-        .order-btn {
-            padding: 14px 18px;
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .search-box button {
-            background: #ff69b4;
-        }
-
-        .cart-btn {
-            background: #28a745;
-        }
-
-        .order-btn {
-            background: #2196f3;
-        }
-
-        /* Main */
-
-        .main-content {
-            width: 90%;
-            max-width: 1400px;
-            margin: 0 auto 40px;
-            display: flex;
-            gap: 25px;
-            align-items: flex-start;
-        }
-
-        /* Sidebar */
-
-        .sidebar {
-            width: 260px;
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 20px;
-        }
-
-        .sidebar h2 {
-            color: #ff69b4;
-            margin-bottom: 20px;
-        }
-
-        .category-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .category-item {
-            padding: 12px 15px;
-            border-radius: 10px;
-            color: #555;
-            transition: .3s;
-        }
-
-        .category-item:hover {
-            background: #ff69b4;
-            color: white;
-        }
-
-        /* Products */
-
-        .container {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            position: relative;
-            background: white;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .card img {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-        }
-
-        .discount-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ff1744;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .content {
-            padding: 18px;
-        }
-
-        .name {
-            font-size: 22px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .price {
-            color: #e53935;
-            font-size: 22px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .old-price {
-            color: #999;
-            text-decoration: line-through;
-            margin-bottom: 6px;
-        }
-
-        .description {
-            margin-top: 12px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        /* Pagination */
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 40px 0;
-        }
-
-        .pagination a {
-            background: white;
-            color: #333;
-            padding: 12px 16px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        .pagination a.active {
-            background: #ff69b4;
-            color: white;
-        }
-
-        .user-info {
-            font-weight: bold;
-            color: #666;
-        }
-
-        @media (max-width: 992px) {
-
-            .main-content {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                position: static;
-            }
-
-            .search-box form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-    </style>
+    <title>Cửa hàng hoa Thúy Hằng</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-
-<body>
+<body class="page-home">
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="slider">
-    <img src="/images/banner1.jpg" class="slide active">
-    <img src="/images/banner2.jpg" class="slide">
-    <img src="/images/banner3.jpg" class="slide">
-</div>
+<main class="home-shell">
 
-<div class="search-box">
-
-    <form action="/search" method="get">
-
-        <input type="text"
-               name="keyword"
-               placeholder="Nhập tên hoa...">
-
-        <button type="submit">
-            Tìm kiếm
-        </button>
-
-        <a href="/cart" class="cart-btn">
-            🛒 Giỏ hàng (<span th:text="${cartCount} ?: 0"></span>)
-        </a>
-
-        <a th:if="${session.user != null}"
-           href="/my-orders"
-           class="order-btn">
-            📦 Đơn hàng (<span th:text="${orderCount} ?: 0"></span>)
-        </a>
-
-        <span th:if="${session.user != null}"
-              class="user-info">
-            👤 <span th:text="${session.user.username}"></span>
-        </span>
-
-    </form>
-
-</div>
-
-<div class="main-content">
-
-    <aside class="sidebar">
-
-        <h2>Danh mục</h2>
-
-        <div class="category-list">
-
-            <a th:each="category : ${categories}"
-               th:href="@{/category/{id}(id=${category.id})}"
-               class="category-item"
-               th:text="${category.name}">
-            </a>
-
+    <section class="hero-banner" aria-label="Banner giới thiệu">
+        <div class="hero-copy">
+            <div class="hero-badge">Shop hoa tươi phong cách hiện đại</div>
+            <h1>Hoa đẹp, đặt nhanh, giao tận nơi theo cách thật dễ chịu</h1>
+            <p>
+                Khám phá những bó hoa sinh nhật, khai trương, cưới hỏi và quà tặng được sắp xếp theo bố cục rõ ràng,
+                dễ xem, dễ chọn và đậm chất Việt hơn.
+            </p>
+            <div class="hero-highlights">
+                <span>Giao hoa nhanh trong ngày</span>
+                <span>Thiết kế theo yêu cầu</span>
+                <span>Ảnh thật, giá rõ ràng</span>
+            </div>
+            <div class="hero-actions">
+                <a href="/cart" class="hero-btn primary">Xem giỏ hàng</a>
+                <a href="/register" class="hero-btn secondary">Đăng ký ngay</a>
+            </div>
         </div>
 
-    </aside>
+        <div class="hero-visual" aria-label="Hình ảnh banner">
+            <div class="hero-visual-frame">
+                <img src="/images/banner1.jpg" class="hero-banner-photo" alt="Banner hoa tươi Thúy Hằng">
+                <div class="hero-float hero-float-top">
+                    <strong>Giao trong ngày</strong>
+                    <span>Đặt sáng, nhận chiều</span>
+                </div>
+                <div class="hero-float hero-float-bottom">
+                    <strong>Hoa tươi chọn lọc</strong>
+                    <span>Mẫu đẹp, dễ chọn, dễ đặt</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div class="container">
+    <section class="benefit-row" aria-label="Lợi ích mua hàng">
+        <div class="benefit-card">
+            <div class="benefit-icon">✓</div>
+            <div>
+                <strong>Hàng chọn lọc</strong>
+                <span>Hoa đẹp, hình ảnh rõ ràng</span>
+            </div>
+        </div>
+        <div class="benefit-card">
+            <div class="benefit-icon">🚚</div>
+            <div>
+                <strong>Giao nhanh</strong>
+                <span>Đặt là có thể giao sớm</span>
+            </div>
+        </div>
+        <div class="benefit-card">
+            <div class="benefit-icon">↩</div>
+            <div>
+                <strong>Đổi trả dễ</strong>
+                <span>Hỗ trợ linh hoạt, rõ ràng</span>
+            </div>
+        </div>
+        <div class="benefit-card">
+            <div class="benefit-icon">☎</div>
+            <div>
+                <strong>Hỗ trợ 24/7</strong>
+                <span>Tư vấn khi bạn cần</span>
+            </div>
+        </div>
+    </section>
 
-        <a th:each="product : ${products}"
-           th:href="@{'/product/' + ${product.id}}">
+    <section class="category-section">
+        <div class="section-title center">
+            <h2>Danh mục sản phẩm</h2>
+            <p>Chọn nhanh theo nhu cầu và dịp tặng</p>
+        </div>
 
-            <div class="card">
+        <div class="category-rail">
+            <a th:each="category, status : ${categories}"
+               th:href="@{/category/{id}(id=${category.id})}"
+               class="category-pill">
+                <span class="category-pill-icon"
+                      th:switch="${status.index % 6}">
+                    <span th:case="0">✿</span>
+                    <span th:case="1">❀</span>
+                    <span th:case="2">❤</span>
+                    <span th:case="3">✦</span>
+                    <span th:case="4">❁</span>
+                    <span th:case="5">★</span>
+                </span>
+                <span class="category-pill-name" th:text="${category.name}"></span>
+            </a>
+        </div>
+    </section>
 
+    <section class="search-box" aria-label="Tìm kiếm sản phẩm">
+        <form action="/search" method="get">
+            <input type="text"
+                   name="keyword"
+                   placeholder="Nhập tên hoa, dịp tặng hoặc màu sắc...">
+
+            <button type="submit">Tìm kiếm</button>
+
+            <a href="/cart" class="cart-btn">
+                Giỏ hàng (<span th:text="${cartCount} ?: 0"></span>)
+            </a>
+
+            <a th:if="${session.user != null}"
+               href="/my-orders"
+               class="order-btn">
+                Đơn hàng (<span th:text="${orderCount} ?: 0"></span>)
+            </a>
+
+            <span th:if="${session.user != null}"
+                  class="user-info">
+                <span th:text="${session.user.username}"></span>
+            </span>
+        </form>
+    </section>
+
+    <section class="highlight-grid" aria-label="Điểm nhấn dịch vụ">
+        <article class="highlight-card">
+            <div class="highlight-icon">01</div>
+            <h3>Gợi ý chọn hoa</h3>
+            <p>Đề xuất theo dịp tặng, màu sắc và ngân sách để bạn đỡ mất thời gian.</p>
+        </article>
+        <article class="highlight-card">
+            <div class="highlight-icon">02</div>
+            <h3>Thanh toán rõ ràng</h3>
+            <p>Hiển thị giá, giảm giá và tổng tiền minh bạch trước khi đặt hàng.</p>
+        </article>
+        <article class="highlight-card">
+            <div class="highlight-icon">03</div>
+            <h3>Đặt hàng thuận tiện</h3>
+            <p>Theo dõi giỏ hàng, đơn hàng và tài khoản trong cùng một giao diện.</p>
+        </article>
+    </section>
+
+    <section class="mini-section">
+        <div class="section-title">
+            <h2>Sản phẩm mới</h2>
+            <p>Những mẫu vừa được đưa lên cửa hàng</p>
+        </div>
+
+        <div class="product-grid five-up-grid">
+            <a th:each="product, status : ${products}"
+               th:if="${status.index < 5}"
+               th:href="@{'/product/' + ${product.id}}"
+               class="card">
                 <div class="discount-badge"
                      th:if="${product.discountPercent != null && product.discountPercent > 0}">
                     -<span th:text="${product.discountPercent}"></span>%
                 </div>
 
-                <img th:src="@{'/images/' + ${product.image}}">
+                <img th:src="@{'/images/' + ${product.image}}"
+                     th:alt="${product.name}">
 
                 <div class="content">
+                    <div class="name" th:text="${product.name}"></div>
 
-                    <div class="name"
-                         th:text="${product.name}">
-                    </div>
+                    <div class="description" th:text="${product.description}"></div>
 
                     <div th:if="${product.discountPercent != null && product.discountPercent > 0}">
-
                         <div class="old-price">
-                            <span th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}"></span>
-                            VNĐ
+                            <span th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}"></span> VNĐ
                         </div>
-
                         <div class="price">
-                            <span th:text="${#numbers.formatDecimal(product.price * (100 - product.discountPercent) / 100,0,'COMMA',0,'POINT')}"></span>
-                            VNĐ
+                            <span th:text="${#numbers.formatDecimal(product.price * (100 - product.discountPercent) / 100,0,'COMMA',0,'POINT')}"></span> VNĐ
                         </div>
-
                     </div>
 
                     <div class="price"
                          th:if="${product.discountPercent == null || product.discountPercent == 0}"
                          th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')} + ' VNĐ'">
                     </div>
+                </div>
+            </a>
+        </div>
+    </section>
 
-                    <div class="description"
-                         th:text="${product.description}">
-                    </div>
+    <section class="featured-section">
+        <div class="section-title">
+            <h2>Ưu đãi hôm nay</h2>
+            <p>Các sản phẩm đang có giảm giá hấp dẫn</p>
+        </div>
 
+        <div class="product-grid five-up-grid">
+            <a th:each="product : ${products}"
+               th:if="${product.discountPercent != null && product.discountPercent > 0}"
+               th:href="@{'/product/' + ${product.id}}"
+               class="card">
+                <div class="discount-badge">
+                    -<span th:text="${product.discountPercent}"></span>%
                 </div>
 
-            </div>
+                <img th:src="@{'/images/' + ${product.image}}"
+                     th:alt="${product.name}">
 
+                <div class="content">
+                    <div class="name" th:text="${product.name}"></div>
+
+                    <div class="description" th:text="${product.description}"></div>
+
+                    <div class="old-price">
+                        <span th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}"></span> VNĐ
+                    </div>
+                    <div class="price">
+                        <span th:text="${#numbers.formatDecimal(product.price * (100 - product.discountPercent) / 100,0,'COMMA',0,'POINT')}"></span> VNĐ
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="featured-section">
+        <div class="section-title">
+            <h2>Sản phẩm nổi bật</h2>
+            <p>Những mẫu hoa được nhiều khách chọn nhất</p>
+        </div>
+
+        <div class="container product-grid">
+            <a th:each="product : ${products}"
+               th:href="@{'/product/' + ${product.id}}">
+                <article class="card">
+                    <div class="discount-badge"
+                         th:if="${product.discountPercent != null && product.discountPercent > 0}">
+                        -<span th:text="${product.discountPercent}"></span>%
+                    </div>
+
+                    <img th:src="@{'/images/' + ${product.image}}"
+                         th:alt="${product.name}">
+
+                    <div class="content">
+                        <div class="name" th:text="${product.name}"></div>
+
+                        <div class="description" th:text="${product.description}"></div>
+
+                        <div th:if="${product.discountPercent != null && product.discountPercent > 0}">
+                            <div class="old-price">
+                                <span th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')}"></span> VNĐ
+                            </div>
+                            <div class="price">
+                                <span th:text="${#numbers.formatDecimal(product.price * (100 - product.discountPercent) / 100,0,'COMMA',0,'POINT')}"></span> VNĐ
+                            </div>
+                        </div>
+
+                        <div class="price"
+                             th:if="${product.discountPercent == null || product.discountPercent == 0}"
+                             th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT')} + ' VNĐ'">
+                        </div>
+                    </div>
+                </article>
+            </a>
+        </div>
+    </section>
+
+    <nav class="pagination" th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/(page=${currentPage - 1})}">
+            ←
         </a>
 
-    </div>
+        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+           th:href="@{/(page=${i})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'active' : ''">
+        </a>
 
-</div>
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/(page=${currentPage + 1})}">
+            →
+        </a>
+    </nav>
 
-<div class="pagination" th:if="${totalPages > 1}">
-
-    <a th:if="${currentPage > 0}"
-       th:href="@{/(page=${currentPage - 1})}">
-        ←
-    </a>
-
-    <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-       th:href="@{/(page=${i})}"
-       th:text="${i + 1}"
-       th:classappend="${i == currentPage} ? 'active' : ''">
-    </a>
-
-    <a th:if="${currentPage < totalPages - 1}"
-       th:href="@{/(page=${currentPage + 1})}">
-        →
-    </a>
-
-</div>
+</main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script>
-    const slides = document.querySelectorAll(".slide");
-
-    let current = 0;
-
-    setInterval(() => {
-
-        slides[current].classList.remove("active");
-
-        current = (current + 1) % slides.length;
-
-        slides[current].classList.add("active");
-
-    }, 5000);
-</script>
-
 </body>
 </html>
-

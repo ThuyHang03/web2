@@ -1,164 +1,287 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
 <head>
+
 <meta charset="UTF-8">
 <title>Quản lý đơn hàng</title>
 
 <style>
 
-body{
-    font-family:Arial,sans-serif;
-    background:#e8e2e2;
+*{
     margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
 
-.header{
-    background:#ff69b4;
-    color:rgb(178, 99, 99);
-    padding:20px;
+body{
+    background:#f4f6f9;
+}
+
+.wrapper{
+    display:flex;
+    min-height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+
+    width:240px;
+    background:#2c3e50;
+    color:white;
+
+}
+
+.logo{
+
+    padding:25px;
     text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    border-bottom:1px solid rgba(255,255,255,.1);
+
 }
 
-.container{
-    width:95%;
-    margin:30px auto;
+.sidebar a{
+
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:18px 25px;
+    transition:.3s;
+
+}
+
+.sidebar a:hover{
+
+    background:#34495e;
+
+}
+
+.active{
+
+    background:#34495e;
+
+}
+
+/* Content */
+
+.content{
+
+    flex:1;
+    padding:30px;
+
+}
+
+h1{
+
+    color:#333;
+    margin-bottom:10px;
+
+}
+
+.info{
+
+    color:#666;
+    margin-bottom:20px;
+
 }
 
 table{
+
     width:100%;
     border-collapse:collapse;
-    background:rgb(72, 181, 110);
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
 }
 
 th{
+
     background:#ff69b4;
-    color:rgb(64, 188, 97);
-    padding:12px;
+    color:white;
+    padding:15px;
+
 }
 
 td{
-    padding:12px;
-    border-bottom:1px solid #130505;
+
+    padding:15px;
     text-align:center;
+    border-bottom:1px solid #eee;
+
 }
 
 tr:hover{
-    background:#7b7575;
+
+    background:#fafafa;
+
 }
 
-.status{
-    padding:6px 12px;
+.payment{
+    background:#28a745;
+    color:white;
+    padding:5px 12px;
     border-radius:20px;
-    color:rgb(82, 14, 166);
-    font-weight:bold;
+}
+.cancel{
+    background:#dc3545;
+    color:white;
+    padding:5px 12px;
+    border-radius:20px;
+}
+.wait{
+
+    background:#ffc107;
+    color:black;
+    padding:5px 12px;
+    border-radius:20px;
+
 }
 
-.waiting{
-    background:#ff9800;
-}
+.view-btn{
 
-.confirmed{
-    background:#28a745;
-}
-
-.cancelled{
-    background:#f44336;
-}
-
-.btn{
-    text-decoration:none;
-    color:rgb(210, 99, 99);
-    padding:8px 12px;
+    background:#007bff;
+    color:white;
+    padding:8px 15px;
     border-radius:6px;
-    font-size:14px;
-}
-
-.btn-view{
-    background:#2196f3;
-}
-
-.btn-confirm{
-    background:#28a745;
-}
-
-.btn-cancel{
-    background:#f44336;
-}
-
-.back{
-    display:inline-block;
-    margin-bottom:20px;
     text-decoration:none;
-    background:#444;
-    color:rgb(193, 170, 170);
-    padding:10px 15px;
-    border-radius:8px;
+
+}
+
+.view-btn:hover{
+
+    background:#0069d9;
+
 }
 
 </style>
 
 </head>
+
 <body>
-    <a href="/admin/orders" style="color:black;">
-    📦 Quản lý đơn hàng
-</a>
 
-<!-- <a href="/admin/orders" class="btn">
-    📦 Quản lý đơn hàng
-</a> -->
+<div class="wrapper">
 
-<div class="container">
+    <!-- Sidebar -->
 
-    <a href="/admin" class="back">
-        ← Quay lại Admin
-    </a>
+    <div class="sidebar">
 
-    <table>
+        <div class="logo">
+            🌸 FLOWER SHOP
+        </div>
 
-        <thead>
+        <a href="/admin">
+            🏠 Dashboard
+        </a>
 
-        <tr>
-            <th>Mã đơn</th>
-            <th>Khách hàng</th>
-            <th>SĐT</th>
-            <th>Tổng tiền</th>
-            <th>Ngày mua</th>
-            <th>Chi tiết</th>
-        </tr>
+        <a href="/admin/products">
+            🌷 Quản lý sản phẩm
+        </a>
 
-        </thead>
+        <a href="/admin/users">
+            👤 Quản lý khách hàng
+        </a>
 
-        <tbody>
+        <a href="/admin/orders" class="active">
+            📦 Quản lý đơn hàng
+        </a>
 
-        <tr th:each="order : ${orders}">
+    </div>
 
-            <td th:text="${order.id}"></td>
+    <!-- Content -->
 
-            <td th:text="${order.customerName}"></td>
+    <div class="content">
 
-            <td th:text="${order.phone}"></td>
+        <h1>📦 Quản lý đơn hàng</h1>
 
-            <td th:text="${#numbers.formatDecimal(order.total,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
+        <p class="info">
+            Tổng đơn hàng:
+            <b th:text="${orders.size()}"></b>
+        </p>
 
-            <td th:text="${#temporals.format(order.orderDate,'dd/MM/yyyy HH:mm')}"></td>
+        <table>
 
-          
+            <tr>
+    <th>Mã đơn</th>
+    <th>Khách hàng</th>
+    <th>SĐT</th>
+    <th>Tổng tiền</th>
+    <th>Ngày mua</th>
+    <th>Trạng thái</th>
+    <th>Chi tiết</th>
+    <th>Thao tác</th>
+</tr>
 
-            <td>
+            <tr th:each="order : ${orders}">
 
-                <a th:href="@{/admin/orders/{id}(id=${order.id})}"
-                   class="btn btn-view">
-                    Xem
-                </a>
+    <td th:text="${order.id}"></td>
 
-            </td>
+    <td th:text="${order.customerName}"></td>
 
-        </tr>
+    <td th:text="${order.phone}"></td>
 
-        </tbody>
+    <td th:text="${#numbers.formatDecimal(order.total,0,'COMMA',0,'POINT')} + ' VNĐ'"></td>
 
-    </table>
+    <td th:text="${#temporals.format(order.orderDate,'dd/MM/yyyy HH:mm')}"></td>
+
+    <td>
+
+        <span
+            th:text="${order.status}"
+            th:classappend="${
+                order.status=='Đã xác nhận'
+                ? 'payment'
+                : (order.status=='Đã hủy'
+                    ? 'cancel'
+                    : 'wait')
+            }">
+        </span>
+
+    </td>
+
+    <td>
+
+        <a class="view-btn"
+           th:href="@{/admin/orders/{id}(id=${order.id})}">
+            Xem
+        </a>
+
+    </td>
+
+    <td>
+
+        <form th:action="@{/admin/orders/confirm/{id}(id=${order.id})}"
+              method="post"
+              style="display:inline;">
+
+            <button type="submit">
+                ✔ Xác nhận
+            </button>
+
+        </form>
+
+        <form th:action="@{/admin/orders/cancel/{id}(id=${order.id})}"
+              method="post"
+              style="display:inline;">
+
+            <button type="submit">
+                ✖ Hủy
+            </button>
+
+        </form>
+
+    </td>
+
+</tr>
+
+        </table>
+
+    </div>
 
 </div>
 
